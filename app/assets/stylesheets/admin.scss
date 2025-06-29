@@ -1,0 +1,16 @@
+@use 'fontawsome_custom';
+@use 'bootstrap_custom';
+@use 'admin-lte/dist/css/adminlte';
+
+.main-sidebar {
+  li.nav-item {
+    width: 100%;
+    a {
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+.login-box {
+  margin: 7% auto;
+}

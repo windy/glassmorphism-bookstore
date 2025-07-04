@@ -3,11 +3,14 @@
 import './libs/add_jquery'
 import 'bootstrap/dist/js/bootstrap'
 
-// import RailsUjs from '@rails/ujs'
+import RailsUjs from '@rails/ujs'
 import "@hotwired/turbo-rails"
-// import * as ActiveStorage from '@rails/activestorage'
+import * as ActiveStorage from '@rails/activestorage'
 
-// ActiveStorage.start()
+Turbo.session.drive = false
+
+RailsUjs.start()
+ActiveStorage.start()
 
 // import './channels'
 import "./controllers"

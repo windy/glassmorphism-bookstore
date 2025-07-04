@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="cleartype" content="on">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="turbo-cache-control" content="no-cache">
+    <% if content_for?(:title) %>
+      <title><%= format("%s - Dashboard", yield(:title)) %></title>
+    <% else %>
+      <title>Admin Dashboard</title>
+    <% end %>
+    <%= csrf_meta_tags %>
+    <%= action_cable_meta_tag %>
+    <%= content_for?(:head) ? yield(:head) : '' %>
+    <%= stylesheet_link_tag 'admin', media: 'all', 'data-turbo-track': 'reload' %>
+    <%= javascript_include_tag 'admin', 'data-turbo-track': Rails.env.production? ? "reload" : "", type: "module" %>
+    <%= favicon_link_tag asset_path("favicon.ico") %>
+  </head>
+  <body class="layout-fixed sidebar-expand-lg bg-body-tertiary app-loaded sidebar-open admin-page <%= body_class %>">
+    <%- if @full_render %>
+      <%= yield %>
+    <%- else %>
+      <div class="app-wrapper">
+        <%= render 'shared/admin/header' %>
+        <%= render 'shared/admin/sidebar' %>
+        <main class="app-main">
+          <div class="content-messages">
+            <%= render 'shared/admin/flash_messages' %>
+          </div>
+          <div class="app-content-header">
+          </div>
+          <div class="app-content">
+            <%= yield %>
+          </div>
+        </main>
+        <div class="app-footer" data-controller="admin-hello">
+          <div class="float-end d-none d-sm-inline">
+            Anything you want
+          </div>
+          <strong data-admin-hello-target="hello"></strong>
+        </div>
+      </div>
+    <%- end %>
+  </body>
+</html>

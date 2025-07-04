@@ -1,0 +1,22 @@
+<% content_for :title do %>
+  Account Setting
+<% end %>
+
+<div class="card card-primary">
+  <div class="card-header with-border">
+    <h3 class="card-title">
+      Edit Account
+    </h3>
+  </div>
+  <%= simple_form_for current_admin, url: admin_account_path do |f| %>
+    <div class="card-body">
+      <%= f.input :name, label: 'Administrator Name' %>
+      <%= f.input :current_password, label: 'Current Password', required: true %>
+      <%= f.input :password, label: 'New Password( Blank if not modify )' %>
+      <%= f.input :password_confirmation, label: 'Confirm New Password' %>
+    </div>
+    <div class="card-footer">
+      <%= f.submit 'Update Account', class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,40 @@
+<% content_for :title, 'Log in' %>
+
+<main>
+  <section class="content-messages">
+    <%= render 'shared/admin/flash_messages' %>
+  </section>
+  <section class="content">
+    <div class="login-box">
+      <div class="login-logo">
+        <span>
+          Admin Dashboard
+        </span>
+      </div>
+      <div class="card">
+        <div class="card-body login-card-body">
+          <p class="login-box-msg">Log in</p>
+          <%= form_tag admin_login_path do %>
+            <div class="input-group mb-3">
+              <%= text_field_tag :name, nil, placeholder: 'Username', class: 'form-control' %>
+              <div class="input-group-append input-group-text">
+                <span class="fas fa-envelope"></span>
+              </div>
+            </div>
+            <div class="input-group mb-3">
+              <%= password_field_tag :password, nil, placeholder: 'Password', class: 'form-control' %>
+              <div class="input-group-append input-group-text">
+                <span class="fas fa-lock"></span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4">
+                <%= submit_tag 'Log in', class: 'btn btn-primary btn-block btn-flat' %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

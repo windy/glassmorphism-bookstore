@@ -25,3 +25,5 @@ Do not add or remove any components and avoid upgrading or downgrading component
 
 Use yarn instead of npm
 Use PostgreSQL instead of sqlite3
+
+After run build assets command for testing, You must clear it.

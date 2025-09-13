@@ -59,7 +59,7 @@ Use `curl` for testing url accessibility, Especially focus on testing the homepa
 
 Do not use `rails console`, use `rails runner` instead if you want insert or check db data.
 
-Write test file in `tmp/`.
+Temporary files needed during development (such as one-off test code) should be written in the `tmp` directory.
 
 ### Some files never edit
 

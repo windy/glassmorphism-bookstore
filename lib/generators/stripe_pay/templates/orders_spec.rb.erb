@@ -1,0 +1,22 @@
+require 'rails_helper'
+
+RSpec.describe "Orders", type: :request do
+  # Uncomment this if controller needs authentication
+  # before { sign_in_as(create(:user)) }
+ 
+  describe "GET /orders" do
+    it "returns http success" do
+      get orders_path
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe "GET /orders/:id" do
+    let(:order) { create(:order) }
+
+    it "returns http success" do
+      get order_path(order)
+      expect(response).to have_http_status(:success)
+    end
+  end
+end

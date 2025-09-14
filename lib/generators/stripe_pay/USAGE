@@ -21,6 +21,8 @@ Example:
         Admin:      app/controllers/admin/orders_controller.rb
                    app/views/admin/orders/index.html.erb
                    app/views/admin/orders/show.html.erb
+        Tests:      spec/requests/orders_spec.rb (basic request tests for index and show)
+                   spec/factories/orders.rb
         Config:     config/initializers/stripe.rb
         Routes:     Added to config/routes.rb
 

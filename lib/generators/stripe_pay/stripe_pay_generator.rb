@@ -126,6 +126,11 @@ class StripePayGenerator < Rails::Generators::Base
     template "admin_views/show.html.erb", "app/views/admin/orders/show.html.erb"
   end
 
+  def generate_tests
+    template "orders_spec.rb.erb", "spec/requests/orders_spec.rb"
+    template "factory.rb.erb", "spec/factories/orders.rb"
+  end
+
   def update_sidebar
     sidebar_path = "app/views/shared/admin/_sidebar.html.erb"
     if File.exist?(sidebar_path)

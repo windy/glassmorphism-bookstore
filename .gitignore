@@ -54,6 +54,8 @@ yarn-debug.log*
 .DS_Store
 
 # Clacky-specific files
-.1024*
-!.1024
-.breakpoints
+/.1024*
+/!.1024
+/.breakpoints
+/*rules
+/!.clackyrules

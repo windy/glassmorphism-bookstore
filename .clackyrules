@@ -55,6 +55,10 @@ Use `rails generate crud xxx [action1] [action2]` (where xxx is your model name 
 
 Do not use `to_param` in model, no need friendly url.
 
+## Testing Requirements
+
+Run `rake test` after implementation to ensure all tests pass. Do not add new test cases, but ensure existing tests continue to pass.
+
 Use `curl` for testing url accessibility.
 
 Do not use `rails console`, use `rails runner` instead if you want insert or check db data.

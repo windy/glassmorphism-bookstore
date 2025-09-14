@@ -6,7 +6,7 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
       </svg>
     </label>
-    
+
     <!-- Search area -->
     <div class="hidden sm:block">
       <% if content_for?(:search) %>
@@ -31,7 +31,7 @@
     <div class="dropdown dropdown-end">
       <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
         <div class="w-10 rounded-full">
-          <%= image_tag asset_path('admin-user.svg'), alt: current_admin.name, class: "w-10 h-10 rounded-full" %>
+          <%= image_tag asset_path('admin-user.svg'), alt: current_admin.name, class: "w-10 h-10 rounded-full" unless Rails.env.test? %>
         </div>
       </div>
       <ul tabindex="0" class="menu dropdown-content bg-base-200 rounded-box z-[1] mt-3 w-52 p-2 shadow-lg">

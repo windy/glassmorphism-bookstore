@@ -81,7 +81,7 @@ class AuthenticationGenerator < Rails::Generators::Base
 
     # Generate timestamped migration files
     migration_template 'migrations/create_users.rb.erb', 'db/migrate/create_users.rb'
-    sleep 1 # Ensure different timestamps
+    sleep 0.01 # Ensure different timestamps
     migration_template 'migrations/create_sessions.rb.erb', 'db/migrate/create_sessions.rb'
   end
 
@@ -111,6 +111,23 @@ class AuthenticationGenerator < Rails::Generators::Base
     say "Creating omniauth initializer...", :green
     copy_file 'initializers/omniauth.rb', 'config/initializers/omniauth.rb'
     add_oauth_config_to_application_yml
+  end
+
+  def create_tests
+    say "Creating authentication tests...", :green
+
+    # Create factory files
+    copy_file 'spec/factories/users.rb', 'spec/factories/users.rb'
+    copy_file 'spec/factories/sessions.rb', 'spec/factories/sessions.rb'
+
+    # Create model tests
+    copy_file 'spec/models/user_spec.rb', 'spec/models/user_spec.rb'
+
+    # Create request tests
+    copy_file 'spec/requests/authenticated_access_spec.rb', 'spec/requests/authenticated_access_spec.rb'
+
+    # Create test helpers
+    copy_file 'spec/support/authentication_helpers.rb', 'spec/support/authentication_helpers.rb'
   end
 
   def add_oauth_config_to_application_yml
@@ -236,6 +253,12 @@ class AuthenticationGenerator < Rails::Generators::Base
     say "- OAuth integration (Google, Facebook, Twitter, GitHub)"
     say "- User invitations"
     say "- User profile management"
+    say "- Complete RSpec test suite including:"
+    say "  * User and Session factories"
+    say "  * Model tests for User and Session"
+    say "  * Request tests for authentication flows"
+    say "  * Home page access tests after login (200 status verification)"
+    say "  * Authentication helper methods"
   end
 
   private

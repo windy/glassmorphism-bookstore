@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 /* Do not adjust these styles */
-
 .avatar > div {
   display: flex;
 }

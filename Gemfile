@@ -16,8 +16,6 @@ gem "good_job", "~> 4.6"
 gem "rails-i18n", "~> 7.0.10"
 gem 'mini_magick', '~> 5.3', '>= 5.3.1'
 
-gem 'turbo-rails'
-
 group :development do
   gem "error_highlight", ">= 0.4.0", platforms: [ :ruby ]
   gem "listen"
@@ -26,6 +24,7 @@ end
 group :development, :test do
   gem "rspec-rails"
   gem "factory_bot_rails"
+  gem "faker"
   gem "debug", platforms: %i[ mri mswin mswin64 mingw x64_mingw ], require: "debug/prelude"
   gem "brakeman", require: false
   gem "rubocop-rails-omakase", require: false

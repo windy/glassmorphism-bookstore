@@ -13,6 +13,7 @@ class User < ApplicationRecord
   validates :name, presence: true, length: { minimum: 4 }
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, allow_nil: true, length: { minimum: MIN_PASSWORD }, if: :password_required?
+  validates :password, confirmation: true, if: :password_required?
 
   normalizes :email, with: -> { _1.strip.downcase }
 

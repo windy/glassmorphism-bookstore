@@ -55,7 +55,7 @@ Use `rails generate crud xxx [action1] [action2]` (where xxx is your model name 
 
 Do not use `to_param` in model, no need friendly url.
 
-Use `curl` for testing url accessibility, Especially focus on testing the homepage after login.
+Use `curl` for testing url accessibility.
 
 Do not use `rails console`, use `rails runner` instead if you want insert or check db data.
 

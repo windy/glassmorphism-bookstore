@@ -7,6 +7,10 @@ class ServiceGenerator < Rails::Generators::NamedBase
     template 'service.rb.erb', "app/services/#{file_name}.rb"
   end
 
+  def create_service_spec
+    template 'service_spec.rb.erb', "spec/services/#{file_name}_spec.rb"
+  end
+
   private
 
   def file_name

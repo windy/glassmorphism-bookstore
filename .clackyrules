@@ -31,6 +31,8 @@ During the system initialization process, you should prioritize creating a beaut
 
 when developing order/payment system, don't write it yourself. Use `rails generate stripe_pay` to generate it first.
 
+**IMPORTANT for stripe_pay:** Before running `rails generate stripe_pay`, ensure NO Order model exists. The generator will create the Order model, migration, and all related files. If Order model already exists, remove it first to avoid conflicts.
+
 Should only need to support Stripe payments by default.
 
 LLM calling feature should support SSE streaming output by default.

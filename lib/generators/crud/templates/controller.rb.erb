@@ -1,4 +1,8 @@
 class <%= class_name.pluralize %>Controller < ApplicationController
+<% if !before_actions.empty? -%>
+<%= before_actions %>
+
+<% end -%>
 <%= controller_actions %>
 
   private

@@ -18,6 +18,9 @@ class CrudGenerator < Rails::Generators::NamedBase
     template "controller.rb.erb", "app/controllers/#{plural_name}_controller.rb"
   end
 
+  def generate_request_spec
+    template "request_spec.rb.erb", "spec/requests/#{plural_name}_spec.rb"
+  end
 
   def add_routes
     route "resources :#{plural_name}#{route_options}"
@@ -219,7 +222,7 @@ class CrudGenerator < Rails::Generators::NamedBase
     actions_needing_set.uniq!
     
     if actions_needing_set.any?
-      "before_action :set_#{singular_name}, only: [:#{actions_needing_set.join(', :')}]"
+      "  before_action :set_#{singular_name}, only: [:#{actions_needing_set.join(', :')}]"
     else
       ""
     end
@@ -288,4 +291,5 @@ class CrudGenerator < Rails::Generators::NamedBase
   end
     ACTION
   end
+
 end

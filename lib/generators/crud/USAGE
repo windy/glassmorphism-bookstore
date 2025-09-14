@@ -10,12 +10,14 @@ Example:
     This will create:
         Controller:  app/controllers/products_controller.rb (with action stubs only)
         Routes:      Updates config/routes.rb
+        Tests:       spec/requests/products_spec.rb (basic request tests for index and show)
 
     bin/rails generate crud Product index show
 
     This will create only index and show actions:
         Controller:  app/controllers/products_controller.rb (with only index and show action stubs)
         Routes:      Updates config/routes.rb with only: [:index, :show]
+        Tests:       spec/requests/products_spec.rb (tests for specified actions only)
 
 Prerequisites:
     The model must exist before running this generator. If the model doesn't exist,
@@ -40,6 +42,7 @@ Features:
     - No views are generated - you write your own
     - Routes are properly configured
     - Inherits from ApplicationController for frontend use
+    - Generates basic request tests for index and show actions
     - Perfect for AI-assisted development without template constraints
 
 Supported field types:

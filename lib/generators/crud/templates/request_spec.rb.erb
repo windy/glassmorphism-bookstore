@@ -1,0 +1,26 @@
+require 'rails_helper'
+
+RSpec.describe "<%= humanized_plural_name %>", type: :request do
+  # Uncomment this if controller needs authentication
+  # before { sign_in_as(create(:user)) }
+ 
+<% if selected_actions.include?('index') -%>
+  describe "GET /<%= plural_name %>" do
+    it "returns http success" do
+      get <%= plural_name %>_path
+      expect(response).to have_http_status(:success)
+    end
+  end
+<% end -%>
+
+<% if selected_actions.include?('show') -%>
+  describe "GET /<%= plural_name %>/:id" do
+    let(:<%= singular_name %>) { create(:<%= singular_name %>) }
+
+    it "returns http success" do
+      get <%= singular_name %>_path(<%= singular_name %>)
+      expect(response).to have_http_status(:success)
+    end
+  end
+<% end -%>
+end

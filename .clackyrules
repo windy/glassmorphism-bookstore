@@ -13,7 +13,7 @@ Kaminari
 Puma
 RSpec
 
-Do not add or remove any components and avoid upgrading or downgrading components lightly.
+Do not add or remove any components and avoid upgrading or downgrading components.
 
 ## When you should restart project
 
@@ -27,9 +27,7 @@ During the system initialization process, you should prioritize creating a beaut
 
 **IMPORTANT:** Do not recreate administrator functionality in User model. Administrator system already exists.
 
-When you need to register/authentication system, don't write it yourself. Use `rails generate authentication` generate it first.
-
-During the system initialization process, you should prioritize creating a beautiful home page that does not require login. Once completed, directly run the project
+When you need to user-side register/authentication system, don't write it yourself. Use `rails generate authentication` generate it first.
 
 when developing order/payment system, don't write it yourself. Use `rails generate stripe_pay` to generate it first.
 
@@ -66,6 +64,10 @@ Every form should include error messages using the shared partial. Add `<%= rend
 ## Testing Requirements
 
 Run `rake test` as the most critical testing step Before delivery feature to users.
+
+Use `bundle exec rspec spec/requests/[controller_name]_spec.rb` to verify page functionality NOT `curl`.
+
+Use `curl -X POST localhost:3000/api/v1/login -H "Content-Type: application/json" -d '{"email":"user@example.com","password":"pass"}' | jq` then use returned session_token in `Authorization: Bearer <token>` header.
 
 Do not use `rails console`, use `rails runner` instead if you want insert or check db data.
 

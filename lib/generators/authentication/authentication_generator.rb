@@ -41,6 +41,9 @@ class AuthenticationGenerator < Rails::Generators::Base
 
     # Profiles controller
     copy_file 'controllers/profiles_controller.rb', 'app/controllers/profiles_controller.rb'
+
+    # API controllers
+    copy_file 'controllers/api/v1/sessions_controller.rb', 'app/controllers/api/v1/sessions_controller.rb'
   end
 
   def create_views
@@ -295,10 +298,13 @@ class AuthenticationGenerator < Rails::Generators::Base
   end
 
   def authenticate_user!
-    if session_record = Session.find_by_id(cookies.signed[:session_token])
+    if session_record = find_session_record
       Current.session = session_record
     else
-      redirect_to sign_in_path
+      respond_to do |format|
+        format.html { redirect_to sign_in_path }
+        format.json { render json: { error: "Authentication required" }, status: :unauthorized }
+      end
     end
   end
 
@@ -308,9 +314,24 @@ class AuthenticationGenerator < Rails::Generators::Base
     Current.user_agent = request.user_agent
     Current.ip_address = request.ip
 
-    if session_record = Session.find_by_id(cookies.signed[:session_token])
+    if session_record = find_session_record
       Current.session = session_record
     end
+  end
+
+  def find_session_record
+    # Try cookie-based authentication first
+    if cookies.signed[:session_token].present?
+      return Session.find_by_id(cookies.signed[:session_token])
+    end
+
+    # Try Authorization header authentication
+    if request.headers['Authorization'].present?
+      token = request.headers['Authorization'].gsub(/Bearer\s+/, '')
+      return Session.find_by_id(token)
+    end
+
+    nil
   end
 
   def handle_password_errors(user)
@@ -388,6 +409,14 @@ class AuthenticationGenerator < Rails::Generators::Base
     member do
       get :edit_password
       patch :update_password
+    end
+  end
+
+  # API routes for curl-friendly authentication
+  namespace :api do
+    namespace :v1 do
+      post 'login', to: 'sessions#login'
+      delete 'logout', to: 'sessions#destroy'
     end
   end
 

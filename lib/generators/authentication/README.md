@@ -123,6 +123,14 @@ post "/auth/:provider/callback", to: "sessions/omniauth#create"
 
 # Invitations
 resource :invitation, only: [:new, :create]
+
+# API routes for curl-friendly authentication
+namespace :api do
+  namespace :v1 do
+    post 'login', to: 'sessions#login'
+    delete 'logout', to: 'sessions#destroy'
+  end
+end
 ```
 
 ## Security Features
@@ -134,6 +142,62 @@ resource :invitation, only: [:new, :create]
 - Automatically clears other sessions when user changes password
 - CSRF protection
 - Modern browser support checking
+
+## API Authentication (Curl-Friendly)
+
+The authentication system includes API endpoints that return JSON responses, making it easy to test with curl or integrate with API clients.
+
+### Login via API
+
+```bash
+# Login and get session token
+curl -X POST http://localhost:3000/api/v1/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com", "password": "password"}'
+
+# Response:
+# {
+#   "user": {
+#     "id": 1,
+#     "name": "John Doe",
+#     "email": "user@example.com"
+#   },
+#   "session_token": "abc123...",
+#   "message": "Signed in successfully"
+# }
+```
+
+### Using Session Token for Authentication
+
+Once you have the session token, you can use it in the Authorization header for subsequent requests:
+
+```bash
+# Access protected resources using the session token
+curl -X GET http://localhost:3000/protected_resource \
+  -H "Authorization: Bearer abc123..."
+```
+
+### Logout via API
+
+```bash
+# Logout using the session token
+curl -X DELETE http://localhost:3000/api/v1/logout \
+  -H "Authorization: Bearer abc123..."
+
+# Response:
+# {
+#   "message": "Signed out successfully"
+# }
+```
+
+### Dual Authentication Support
+
+The system supports both traditional cookie-based authentication for web browsers and token-based authentication for API clients:
+
+- **Cookie-based**: Automatic for HTML requests, uses HttpOnly cookies
+- **Token-based**: For API requests, uses `Authorization: Bearer <token>` header
+
+Both authentication methods work seamlessly with the same controllers and routes.
 
 ## Customization
 

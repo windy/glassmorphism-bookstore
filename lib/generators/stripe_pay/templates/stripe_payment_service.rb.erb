@@ -108,19 +108,27 @@ class StripePaymentService < ApplicationService
   private
 
   def default_host
-    return ENV['DOMAIN'] if ENV['DOMAIN'].present?
-    return "#{@request.host}:#{@request.port}" if @request&.host
-    return Rails.application.routes.default_url_options[:host] if Rails.application.routes.default_url_options[:host].present?
-    return Rails.application.config.action_mailer.default_url_options[:host] if Rails.application.config.action_mailer.default_url_options[:host].present?
-    raise 'No `DOMAIN` environment variable found, stripe payment callback url failed'
+    if not Rails.env.production?
+      if not @request.present?
+        raise "Got default_host for payment callback url failed, You Must pass `request` to initialize function"
+      end
+      return "#{@request.host}:#{@request.port}"
+    else
+      return ENV['DOMAIN'] if ENV['DOMAIN'].present?
+      raise 'No `DOMAIN` environment variable found, stripe payment callback url failed'
+    end
   end
 
   def default_protocol
-    return ENV['PROTOCOL'] if ENV['PROTOCOL'].present?
-    return @request.protocol if @request&.protocol
-    return Rails.application.routes.default_url_options[:protocol] if Rails.application.routes.default_url_options[:protocol].present?
-    return Rails.application.config.action_mailer.default_url_options[:protocol] if Rails.application.config.action_mailer.default_url_options[:protocol].present?
-    raise 'No `PROTOCOL` environment variable found, stripe payment callback url failed'
+    if not Rails.env.production?
+      if not @request.present?
+        raise "Got default_protocol for payment callback url failed, You Must pass `request` to initialize function"
+      end
+      return @request.protocol
+    else
+      return ENV['PROTOCOL'] if ENV['PROTOCOL'].present?
+      raise 'No `PROTOCOL` environment variable found, stripe payment callback url failed'
+    end
   end
 
   def self.handle_checkout_success(checkout_session)

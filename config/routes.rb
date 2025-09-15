@@ -8,7 +8,6 @@ class AdminConstraint
 end
 
 Rails.application.routes.draw do
-  resources :posts
   # Do not write business logic at admin dashboard
   namespace :admin do
     resources :administrators

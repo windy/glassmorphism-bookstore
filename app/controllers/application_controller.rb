@@ -4,5 +4,6 @@ class ApplicationController < ActionController::Base
   
   include MissingTemplateFallbackConcern
   include FriendlyErrorHandlingConcern
+  include DevelopmentCsrfBypassConcern
 
 end

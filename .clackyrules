@@ -51,7 +51,7 @@ Always keep UI responsiveness in mind when coding for user interfaces.
 
 Use `rails generate admin_crud xxx` (where xxx is your model name that you created before) to create the initial CRUD when developing the admin management page
 
-Use `rails generate crud xxx [action1] [action2] [--auth]` (where xxx is your model name that you created before, action is optional(all actions by default), --auth when your controller need authenticate_user!) to create the initial CRUD when developing the user-side functionality
+Use `rails generate crud xxx [action1] [action2] [--auth]` (where xxx is your model name that you created before, action is optional(all actions by default), --auth means need authenticate_user!) to create the initial CRUD when developing the user-side functionality
 
 Do not use `to_param` in model, no need friendly url.
 
@@ -61,11 +61,11 @@ Every form should include error messages using the shared partial. Add `<%= rend
 
 ## Testing Requirements
 
-Run `rake test` as the most critical testing step Before delivery feature to users.
+Keep `rake test` all passed Before delivery feature to users.
 
-Use `bundle exec rspec spec/requests/[controller_name]_spec.rb` to verify page functionality NOT `curl`.
+Double check `rake test` all passed at last when you finish the task.
 
-Use `curl -X POST localhost:3000/api/v1/login -H "Content-Type: application/json" -d '{"email":"user@example.com","password":"pass"}' | jq` then use returned session_token in `Authorization: Bearer <token>` header.
+Use `curl -X POST localhost:3000/sign_in -H "Content-Type: application/json" -d '{"email":"user@example.com","password":"pass"}'` then use returned session_token in `Authorization: Bearer <token>` header.
 
 Do not use `rails console`, use `rails runner` instead if you want insert or check db data.
 

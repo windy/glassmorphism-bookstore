@@ -385,7 +385,7 @@ class AuthenticationGenerator < Rails::Generators::Base
   delete 'sign_out', to: 'sessions#destroy', as: :sign_out
   get  "sign_up", to: "registrations#new"
   post "sign_up", to: "registrations#create"
-  resource :session, only: [:new, :show] do
+  resource :session, only: [:new, :show, :destroy] do
     get :devices, on: :member
     delete :destroy_one, on: :member
   end

@@ -49,4 +49,12 @@ module ApplicationHelper
   def field_required?(model, field_name)
     model.class.validators_on(field_name.to_sym).any? { |v| v.is_a?(ActiveModel::Validations::PresenceValidator) }
   end
+
+  # Custom paginate method to override Kaminari with DaisyUI styling
+  # This prevents AI from trying to add non-existent themes
+  def paginate(scope, **options)
+    # Use our custom kaminari views with DaisyUI styling
+    # No theme parameter needed - we have custom views
+    super(scope, **options.except(:theme))
+  end
 end

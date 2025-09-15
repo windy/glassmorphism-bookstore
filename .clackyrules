@@ -25,6 +25,8 @@ During the system initialization process, you should prioritize creating a beaut
 
 ### Some import tips when Developing user authentication/payment/LLM-calling(AI APP) system
 
+**IMPORTANT:** Do not recreate administrator functionality in User model. Administrator system already exists.
+
 When you need to register/authentication system, don't write it yourself. Use `rails generate authentication` generate it first.
 
 During the system initialization process, you should prioritize creating a beautiful home page that does not require login. Once completed, directly run the project
@@ -59,9 +61,7 @@ Do not use `to_param` in model, no need friendly url.
 
 ## Testing Requirements
 
-Run `rake test` after implementation to ensure all tests pass. Do not add new test cases, but ensure existing tests continue to pass.
-
-Use `curl` for testing url accessibility.
+Run `rake test` as the most critical testing step Before delivery feature to users.
 
 Do not use `rails console`, use `rails runner` instead if you want insert or check db data.
 
@@ -70,3 +70,5 @@ Temporary files needed during development (such as one-off test code) should be 
 ### Some files never edit
 
 Never edit `application.html.erb`, update `_navbar.html.erb` instead if need add navbar.
+
+Never edit `admin/base_controller.rb`

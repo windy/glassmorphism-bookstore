@@ -4,6 +4,7 @@ import RailsUjs from '@rails/ujs'
 import * as ActiveStorage from '@rails/activestorage'
 import Alpine from 'alpinejs'
 import * as ActionCable from "@rails/actioncable"
+import { createConsumer } from "@rails/actioncable"
 import './channels'
 
 RailsUjs.start()
@@ -13,6 +14,9 @@ window.ActionCable = ActionCable
 
 Alpine.start()
 window.Alpine = Alpine
+
+window.App ||= {}
+window.App.cable = createConsumer()
 
 document.addEventListener('DOMContentLoaded', () => {
   const disableRemoteForms = document.querySelectorAll('form[data-remote="true"]');

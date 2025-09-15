@@ -99,7 +99,18 @@ class AdminCrudGenerator < Rails::Generators::NamedBase
 
   def model_columns
     @model_columns ||= model_class.columns.reject do |column|
-      %w[id created_at updated_at].include?(column.name)
+      # Skip system fields
+      system_fields = %w[id created_at updated_at]
+      
+      # Skip sensitive fields
+      sensitive_fields = %w[password_digest encrypted_password password_hash]
+      
+      # Skip fields ending with common sensitive patterns
+      sensitive_patterns = %w[_digest _encrypted _hash _token _key]
+      
+      system_fields.include?(column.name) ||
+      sensitive_fields.include?(column.name) ||
+      sensitive_patterns.any? { |pattern| column.name.end_with?(pattern) }
     end
   end
 

@@ -101,28 +101,57 @@
     <% end %>
     const errorText = `<%= j(error_text) %>`;
 
-    // Copy to clipboard
-    navigator.clipboard.writeText(errorText).then(() => {
-      // Show success feedback
-      const button = document.getElementById('copy-btn');
-      const originalText = button.innerHTML;
-      button.innerHTML = `
-        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-        </svg>
-        Copied!
-      `;
-      button.classList.remove('btn-outline', 'btn-primary');
-      button.classList.add('btn-success');
+    // Try modern clipboard API first, then fallback to execCommand for iframe compatibility
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(errorText).then(() => {
+        showCopySuccess();
+      }).catch(() => {
+        // Fallback for iframe: use execCommand
+        fallbackCopy(errorText);
+      });
+    } else {
+      // Fallback for older browsers or iframe restrictions
+      fallbackCopy(errorText);
+    }
+  }
 
-      setTimeout(() => {
-        button.innerHTML = originalText;
-        button.classList.remove('btn-success');
-        button.classList.add('btn-outline', 'btn-primary');
-      }, 2000);
-    }).catch(err => {
-      console.error('Failed to copy: ', err);
-      alert('Failed to copy error details');
-    });
+  function fallbackCopy(text) {
+    try {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.select();
+      const successful = document.execCommand('copy');
+      document.body.removeChild(textArea);
+      
+      if (successful) {
+        showCopySuccess();
+      } else {
+        alert('复制失败，请手动复制错误信息');
+      }
+    } catch (err) {
+      alert('复制失败，请手动复制错误信息');
+    }
+  }
+
+  function showCopySuccess() {
+    const button = document.getElementById('copy-btn');
+    const originalText = button.innerHTML;
+    button.innerHTML = `
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+      Copied!
+    `;
+    button.classList.remove('btn-outline', 'btn-primary');
+    button.classList.add('btn-success');
+
+    setTimeout(() => {
+      button.innerHTML = originalText;
+      button.classList.remove('btn-success');
+      button.classList.add('btn-outline', 'btn-primary');
+    }, 2000);
   }
 </script>

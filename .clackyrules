@@ -59,6 +59,8 @@ Use `rails generate crud xxx [action1] [action2]` (where xxx is your model name 
 
 Do not use `to_param` in model, no need friendly url.
 
+ALWAYS prefer daisyUI native components(tab/modal/dropdown etc) over custom JavaScript solutions.
+
 ## Testing Requirements
 
 Run `rake test` as the most critical testing step Before delivery feature to users.

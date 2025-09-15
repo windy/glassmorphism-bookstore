@@ -16,7 +16,9 @@
       <%%= form_with model: [:admin, @<%= singular_name %>], local: true, class: "space-y-6" do |form| %>
         <%%= render 'shared/error_messages', model: @<%= singular_name %> %>
 
-<% model_attributes.each do |attribute| -%>
+<% all_form_fields.each do |field| -%>
+<% if field[:type] == :attribute -%>
+<% attribute = field[:attribute] -%>
         <!-- <%= attribute.name.humanize %> -->
 <% if attribute.type.to_s == 'boolean' -%>
         <div class="form-control">
@@ -41,6 +43,40 @@
           <%% if @<%= singular_name %>.errors[:<%= attribute.name %>].any? %>
             <label class="label">
               <span class="label-text-alt text-red-500"><%%= @<%= singular_name %>.errors[:<%= attribute.name %>].first %></span>
+            </label>
+          <%% end %>
+        </div>
+<% end -%>
+<% elsif field[:type] == :enum -%>
+        <!-- <%= field[:enum_name].humanize %> -->
+        <div class="form-control">
+          <%%= form.label :<%= field[:enum_name] %>, class: "label" do %>
+            <span class="label-text font-medium"><%= field[:enum_name].humanize %><%% if field_required?(@<%= singular_name %>, :<%= field[:enum_name] %>) %> <span class="text-red-500">*</span><%% end %></span>
+          <%% end %>
+          <%%= form.select :<%= field[:enum_name] %>, 
+              options_for_select([['Select <%= field[:enum_name].humanize %>', '']] + <%= enum_options_for_select(field[:enum_name], field[:enum_values]).inspect %>, @<%= singular_name %>.<%= field[:enum_name] %>),
+              {},
+              { class: "select select-bordered w-full" } %>
+          <%% if @<%= singular_name %>.errors[:<%= field[:enum_name] %>].any? %>
+            <label class="label">
+              <span class="label-text-alt text-red-500"><%%= @<%= singular_name %>.errors[:<%= field[:enum_name] %>].first %></span>
+            </label>
+          <%% end %>
+        </div>
+<% elsif field[:type] == :association -%>
+<% association = field[:association] -%>
+        <!-- <%= association[:name].to_s.humanize %> -->
+        <div class="form-control">
+          <%%= form.label :<%= association[:foreign_key] %>, class: "label" do %>
+            <span class="label-text font-medium"><%= association[:name].to_s.humanize %><%% if field_required?(@<%= singular_name %>, :<%= association[:name] %>) %> <span class="text-red-500">*</span><%% end %></span>
+          <%% end %>
+          <%%= form.select :<%= association[:foreign_key] %>, 
+              options_for_select([['Select <%= association[:name].to_s.humanize %>', '']] + <%= association_options_method(association) %>, @<%= singular_name %>.<%= association[:foreign_key] %>),
+              {},
+              { class: "select select-bordered w-full" } %>
+          <%% if @<%= singular_name %>.errors[:<%= association[:foreign_key] %>].any? %>
+            <label class="label">
+              <span class="label-text-alt text-red-500"><%%= @<%= singular_name %>.errors[:<%= association[:foreign_key] %>].first %></span>
             </label>
           <%% end %>
         </div>

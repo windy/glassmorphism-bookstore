@@ -19,8 +19,14 @@
             <thead>
               <tr>
                 <th>ID</th>
-<% display_attributes.each do |attribute| -%>
-                <th><%= attribute.name.humanize %></th>
+<% display_fields.each do |field| -%>
+<% if field[:type] == :attribute -%>
+                <th><%= field[:attribute].name.humanize %></th>
+<% elsif field[:type] == :enum -%>
+                <th><%= field[:enum_name].humanize %></th>
+<% elsif field[:type] == :association -%>
+                <th><%= field[:association][:name].to_s.humanize %></th>
+<% end -%>
 <% end -%>
                 <th>Created At</th>
                 <th class="text-center">Actions</th>
@@ -30,9 +36,11 @@
               <%% @<%= plural_name %>.each do |<%= singular_name %>| %>
                 <tr>
                   <td class="font-mono text-sm"><%%= <%= singular_name %>.id %></td>
-<% display_attributes.each do |attribute| -%>
-                  <td<% if attribute.type.to_s == 'text' %> class="max-w-xs"<% elsif display_attributes.first == attribute %> class="font-semibold"<% end %>>
-<% if display_attributes.first == attribute -%>
+<% display_fields.each_with_index do |field, index| -%>
+<% if field[:type] == :attribute -%>
+<% attribute = field[:attribute] -%>
+                  <td<% if attribute.type.to_s == 'text' %> class="max-w-xs"<% elsif index == 0 %> class="font-semibold"<% end %>>
+<% if index == 0 -%>
                     <%%= link_to <%= truncate_value_for(attribute, singular_name) %>, admin_<%= singular_name %>_path(<%= singular_name %>.id), class: "link link-primary" %>
 <% elsif attribute.type.to_s == 'text' -%>
                     <div class="truncate">
@@ -42,6 +50,26 @@
                     <%%= <%= truncate_value_for(attribute, singular_name) %> %>
 <% end -%>
                   </td>
+<% elsif field[:type] == :enum -%>
+                  <td>
+<% if index == 0 -%>
+                    <%%= link_to <%= truncate_value_for_enum(field[:enum_name], singular_name) %>, admin_<%= singular_name %>_path(<%= singular_name %>.id), class: "link link-primary" %>
+<% else -%>
+                    <span class="badge badge-outline">
+                      <%%= <%= truncate_value_for_enum(field[:enum_name], singular_name) %> %>
+                    </span>
+<% end -%>
+                  </td>
+<% elsif field[:type] == :association -%>
+<% association = field[:association] -%>
+                  <td>
+<% if index == 0 -%>
+                    <%%= link_to <%= truncate_value_for_association(association, singular_name) %>, admin_<%= singular_name %>_path(<%= singular_name %>.id), class: "link link-primary" %>
+<% else -%>
+                    <%%= <%= truncate_value_for_association(association, singular_name) %> %>
+<% end -%>
+                  </td>
+<% end -%>
 <% end -%>
                   <td class="text-sm text-gray-600">
                     <%%= <%= singular_name %>.created_at.strftime("%Y-%m-%d %H:%M") %>

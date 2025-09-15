@@ -115,8 +115,87 @@ class AdminCrudGenerator < Rails::Generators::NamedBase
     end
   end
 
+  def model_enums
+    @model_enums ||= model_class.defined_enums
+  end
+
+  def model_associations
+    @model_associations ||= model_class.reflect_on_all_associations(:belongs_to).map do |association|
+      {
+        name: association.name,
+        class_name: association.class_name,
+        foreign_key: association.foreign_key,
+        optional: association.options[:optional]
+      }
+    end
+  end
+
+  def all_form_fields
+    # Combine regular attributes, enums, and associations
+    fields = []
+    
+    # Get lists of excluded field names
+    foreign_keys = model_associations.map { |assoc| assoc[:foreign_key] }
+    enum_names = model_enums.keys.map(&:to_s)
+    
+    # Add regular attributes (excluding foreign keys and enum fields)
+    model_attributes.reject { |attr| 
+      foreign_keys.include?(attr.name) || enum_names.include?(attr.name)
+    }.each do |attr|
+      fields << {
+        name: attr.name,
+        type: :attribute,
+        attribute: attr
+      }
+    end
+    
+    # Add enum fields
+    model_enums.each do |enum_name, _|
+      fields << {
+        name: enum_name.to_s,
+        type: :enum,
+        enum_name: enum_name,
+        enum_values: model_class.send(enum_name.pluralize)
+      }
+    end
+    
+    # Add association fields
+    model_associations.each do |assoc|
+      fields << {
+        name: assoc[:foreign_key],
+        type: :association,
+        association: assoc
+      }
+    end
+    
+    fields
+  end
+
   def permit_params
-    model_attributes.map(&:name).map { |name| ":#{name}" }.join(', ')
+    params = []
+    
+    # Get lists of excluded field names
+    foreign_keys = model_associations.map { |assoc| assoc[:foreign_key] }
+    enum_names = model_enums.keys.map(&:to_s)
+    
+    # Add regular attributes (excluding foreign keys and enum fields)
+    model_attributes.reject { |attr| 
+      foreign_keys.include?(attr.name) || enum_names.include?(attr.name)
+    }.each do |attr|
+      params << ":#{attr.name}"
+    end
+    
+    # Add enum fields
+    model_enums.each do |enum_name, _|
+      params << ":#{enum_name}"
+    end
+    
+    # Add association foreign keys
+    model_associations.each do |assoc|
+      params << ":#{assoc[:foreign_key]}"
+    end
+    
+    params.uniq.join(', ')
   end
 
   def display_attributes
@@ -124,6 +203,61 @@ class AdminCrudGenerator < Rails::Generators::NamedBase
     attrs = model_attributes.select { |attr| %w[string text].include?(attr.type.to_s) }
     attrs = model_attributes if attrs.empty?
     attrs.first(3) # Limit to first 3 for table display
+  end
+
+  def display_fields
+    # Return first few fields for table display, including attributes, enums, and associations
+    fields = []
+    foreign_keys = model_associations.map { |assoc| assoc[:foreign_key] }
+    enum_names = model_enums.keys.map(&:to_s)
+    
+    # Add string/text attributes first (prioritize name-like fields)
+    string_attrs = model_attributes.reject { |attr| 
+      foreign_keys.include?(attr.name) || enum_names.include?(attr.name)
+    }.select { |attr| %w[string text].include?(attr.type.to_s) }
+    
+    string_attrs.first(2).each do |attr|
+      fields << { type: :attribute, attribute: attr }
+    end
+    
+    # Add boolean attributes if we have space
+    if fields.length < 4
+      boolean_attrs = model_attributes.reject { |attr| 
+        foreign_keys.include?(attr.name) || enum_names.include?(attr.name) ||
+        fields.any? { |f| f[:type] == :attribute && f[:attribute].name == attr.name }
+      }.select { |attr| attr.type.to_s == 'boolean' }
+      
+      boolean_attrs.first(4 - fields.length).each do |attr|
+        fields << { type: :attribute, attribute: attr }
+      end
+    end
+    
+    # Add enums
+    if fields.length < 4
+      model_enums.keys.first(4 - fields.length).each do |enum_name|
+        fields << { type: :enum, enum_name: enum_name, enum_values: model_class.send(enum_name.pluralize) }
+      end
+    end
+    
+    # Add associations if we still have space
+    if fields.length < 4
+      model_associations.first(4 - fields.length).each do |assoc|
+        fields << { type: :association, association: assoc }
+      end
+    end
+    
+    # Fill remaining with any other attributes if needed
+    if fields.length < 4
+      remaining_attrs = model_attributes.reject { |attr| 
+        foreign_keys.include?(attr.name) || enum_names.include?(attr.name) ||
+        fields.any? { |f| f[:type] == :attribute && f[:attribute].name == attr.name }
+      }
+      remaining_attrs.first(4 - fields.length).each do |attr|
+        fields << { type: :attribute, attribute: attr }
+      end
+    end
+    
+    fields
   end
 
   def form_field_for(attribute)
@@ -142,6 +276,31 @@ class AdminCrudGenerator < Rails::Generators::NamedBase
       "time_field"
     else
       "text_field"
+    end
+  end
+
+  def form_field_for_enum(enum_name, enum_values)
+    "select"
+  end
+
+  def form_field_for_association(association)
+    "select"
+  end
+
+  def enum_options_for_select(enum_name, enum_values)
+    enum_values.map { |key, value| [key.humanize, key] }
+  end
+
+  def association_options_method(association)
+    klass = association[:class_name].constantize
+    if klass.respond_to?(:name) && klass.column_names.include?('name')
+      "#{association[:class_name]}.all.map { |item| [item.name, item.id] }"
+    elsif klass.respond_to?(:title) && klass.column_names.include?('title')
+      "#{association[:class_name]}.all.map { |item| [item.title, item.id] }"
+    elsif klass.respond_to?(:email) && klass.column_names.include?('email')
+      "#{association[:class_name]}.all.map { |item| [item.email, item.id] }"
+    else
+      "#{association[:class_name]}.all.map { |item| [item.id, item.id] }"
     end
   end
 
@@ -169,13 +328,42 @@ class AdminCrudGenerator < Rails::Generators::NamedBase
     end
   end
 
+  def display_value_for_enum(enum_name, instance_var)
+    "#{instance_var}.#{enum_name}&.humanize"
+  end
+
+  def display_value_for_association(association, instance_var)
+    assoc_name = association[:name]
+    klass = association[:class_name].constantize rescue nil
+    
+    if klass && klass.column_names.include?('name')
+      "#{instance_var}.#{assoc_name}&.name"
+    elsif klass && klass.column_names.include?('title')
+      "#{instance_var}.#{assoc_name}&.title"
+    elsif klass && klass.column_names.include?('email')
+      "#{instance_var}.#{assoc_name}&.email"
+    else
+      "#{instance_var}.#{assoc_name}&.id"
+    end
+  end
+
   def truncate_value_for(attribute, instance_var)
     case attribute.type.to_s
     when 'text'
       "truncate(#{instance_var}.#{attribute.name}, length: 100)"
+    when 'boolean'
+      "content_tag(:span, (#{instance_var}.#{attribute.name} ? 'Yes' : 'No'), class: \"badge \" + (#{instance_var}.#{attribute.name} ? 'badge-success' : 'badge-error'))"
     else
       "#{instance_var}.#{attribute.name}"
     end
+  end
+
+  def truncate_value_for_enum(enum_name, instance_var)
+    "#{instance_var}.#{enum_name}&.humanize"
+  end
+
+  def truncate_value_for_association(association, instance_var)
+    display_value_for_association(association, instance_var)
   end
 
   def attribute_required?(attribute)

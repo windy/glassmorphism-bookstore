@@ -3,22 +3,7 @@
     <h1 class="text-3xl font-bold text-gray-900 mb-8 text-center">Create New Order</h1>
 
     <%%= form_with model: @order, local: true, class: "space-y-6" do |form| %>
-      <%% if @order.errors.any? %>
-        <div class="bg-red-50 border border-red-200 rounded-md p-4">
-          <div class="flex">
-            <div>
-              <h3 class="text-sm font-medium text-red-800">
-                <%%= pluralize(@order.errors.count, "error") %> prohibited this order from being saved:
-              </h3>
-              <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
-                <%% @order.errors.full_messages.each do |message| %>
-                  <li><%%= message %></li>
-                <%% end %>
-              </ul>
-            </div>
-          </div>
-        </div>
-      <%% end %>
+      <%%= render 'shared/error_messages', model: @order %>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="form-group">

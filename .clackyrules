@@ -61,6 +61,8 @@ Do not use `to_param` in model, no need friendly url.
 
 ALWAYS prefer daisyUI native components(tab/modal/dropdown etc) over custom JavaScript solutions.
 
+Every form should include error messages using the shared partial. Add `<%= render 'shared/error_messages', model: @your_model %>` at the beginning of every form for consistent error display.
+
 ## Testing Requirements
 
 Run `rake test` as the most critical testing step Before delivery feature to users.

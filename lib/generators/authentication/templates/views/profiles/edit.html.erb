@@ -11,21 +11,7 @@
       <div class="card bg-base-100 shadow-xl">
         <div class="card-body">
           <%= form_with(model: @user, url: profile_path, local: true, class: "space-y-6") do |form| %>
-            <% if @user.errors.any? %>
-              <div class="alert alert-error">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 shrink-0">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9-.75a9 9 0 0118 0 9 9 0 01-18 0z" />
-                </svg>
-                <div>
-                  <h3 class="font-bold">Please fix the following errors:</h3>
-                  <ul class="mt-2">
-                    <% @user.errors.full_messages.each do |message| %>
-                      <li><%= message %></li>
-                    <% end %>
-                  </ul>
-                </div>
-              </div>
-            <% end %>
+            <%= render 'shared/error_messages', model: @user %>
 
             <div class="form-control">
               <%= form.label :name, class: "label" do %>

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "<%= humanized_plural_name %>", type: :request do
+RSpec.describe "<%= plural_name.humanize %>", type: :request do
   <% if requires_authentication? -%>
   before { sign_in_as(create(:user)) }
   <% else -%>

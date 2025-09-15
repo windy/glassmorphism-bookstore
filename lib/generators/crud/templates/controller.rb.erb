@@ -3,13 +3,8 @@ class <%= class_name.pluralize %>Controller < ApplicationController
   before_action :authenticate_user!
 
 <% end -%>
-<% if !before_actions.empty? -%>
-<%= before_actions %>
-
-<% end -%>
-<%= controller_actions %>
+<%= controller_actions%>
 
   private
-
   # Write your private methods here
 end

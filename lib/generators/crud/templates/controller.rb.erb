@@ -1,4 +1,8 @@
 class <%= class_name.pluralize %>Controller < ApplicationController
+<% if requires_authentication? -%>
+  before_action :authenticate_user!
+
+<% end -%>
 <% if !before_actions.empty? -%>
 <%= before_actions %>
 

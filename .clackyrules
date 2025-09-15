@@ -35,8 +35,6 @@ when developing order/payment system, don't write it yourself. Use `rails genera
 
 Should only need to support Stripe payments by default.
 
-LLM calling feature should support SSE streaming output by default.
-
 ### Some important tips when coding
 
 Do not generate any fake data that should originally be in the database for users.
@@ -53,7 +51,7 @@ Always keep UI responsiveness in mind when coding for user interfaces.
 
 Use `rails generate admin_crud xxx` (where xxx is your model name that you created before) to create the initial CRUD when developing the admin management page
 
-Use `rails generate crud xxx [action1] [action2]` (where xxx is your model name that you created before, action is optional(all actions by default)) to create the initial CRUD when developing the user-side functionality
+Use `rails generate crud xxx [action1] [action2] [--auth]` (where xxx is your model name that you created before, action is optional(all actions by default), --auth when your controller need authenticate_user!) to create the initial CRUD when developing the user-side functionality
 
 Do not use `to_param` in model, no need friendly url.
 

@@ -5,6 +5,8 @@ class CrudGenerator < Rails::Generators::NamedBase
   ModelAttribute = Struct.new(:name, :type, :sql_type, :null, :default, keyword_init: true)
 
   argument :actions, type: :array, default: [], banner: "action action"
+  
+  class_option :auth, type: :boolean, default: false, desc: "Generate controller with authentication required"
 
   def check_model_exists
     unless model_class_exists?
@@ -180,6 +182,10 @@ class CrudGenerator < Rails::Generators::NamedBase
     else
       actions
     end
+  end
+
+  def requires_authentication?
+    options[:auth]
   end
 
   def controller_actions

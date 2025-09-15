@@ -1,9 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe "<%= humanized_plural_name %>", type: :request do
-  # Uncomment this if controller needs authentication
+  <% if requires_authentication? -%>
+  before { sign_in_as(create(:user)) }
+  <% else -%>
+  # Uncomment this if controller need authentication
   # before { sign_in_as(create(:user)) }
- 
+  <% end -%>
+
 <% if selected_actions.include?('index') -%>
   describe "GET /<%= plural_name %>" do
     it "returns http success" do

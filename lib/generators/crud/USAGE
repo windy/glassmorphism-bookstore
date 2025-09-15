@@ -12,6 +12,13 @@ Example:
         Routes:      Updates config/routes.rb
         Tests:       spec/requests/products_spec.rb (basic request tests for index and show)
 
+    bin/rails generate crud Product --auth
+
+    This will create a controller with authentication required:
+        Controller:  app/controllers/products_controller.rb (with before_action :authenticate_user!)
+        Routes:      Updates config/routes.rb
+        Tests:       spec/requests/products_spec.rb (basic request tests for index and show)
+
     bin/rails generate crud Product index show
 
     This will create only index and show actions:
@@ -44,6 +51,7 @@ Features:
     - Inherits from ApplicationController for frontend use
     - Generates basic request tests for index and show actions
     - Perfect for AI-assisted development without template constraints
+    - Optional authentication with --auth flag (adds before_action :authenticate_user!)
 
 Supported field types:
     string, text, integer, decimal, float, boolean, date, datetime, timestamp, time
@@ -65,3 +73,9 @@ Examples:
 
     # For existing Post model - only index
     bin/rails generate crud Post index
+
+    # For existing Product model with authentication
+    bin/rails generate crud Product --auth
+
+    # For existing Order model with authentication and specific actions
+    bin/rails generate crud Order index show --auth

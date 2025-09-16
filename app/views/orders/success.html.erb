@@ -1,0 +1,85 @@
+<div class="container mx-auto px-4 py-8 relative z-10">
+  <div class="max-w-2xl mx-auto text-center">
+    <!-- 成功动画图标 -->
+    <div class="mb-8">
+      <div class="text-8xl mb-4 floating">✅</div>
+      <div class="glass rounded-full w-32 h-32 mx-auto flex items-center justify-center pulse-glow">
+        <span class="text-4xl text-white">🎉</span>
+      </div>
+    </div>
+
+    <!-- 成功消息 -->
+    <div class="glass rounded-3xl p-8 mb-8">
+      <h1 class="text-4xl font-bold text-white text-glow mb-4">
+        支付成功！
+      </h1>
+      
+      <p class="text-xl text-white/90 mb-6">
+        感谢您的购买，您的订单已完成支付
+      </p>
+
+      <!-- 订单信息 -->
+      <div class="card-glass shadow-lg mb-6">
+        <div class="card-body">
+          <h2 class="text-2xl font-bold text-white mb-4">订单信息</h2>
+          <div class="space-y-3 text-left">
+            <div class="flex justify-between items-center">
+              <span class="text-white/70">订单号</span>
+              <span class="font-bold text-white">#<%= @order.id %></span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-white/70">商品</span>
+              <span class="text-white"><%= @order.product_name %></span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-white/70">支付金额</span>
+              <span class="text-2xl font-bold text-white glow">¥<%= @order.amount %></span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-white/70">支付时间</span>
+              <span class="text-white"><%= @order.updated_at.strftime('%Y年%m月%d日 %H:%M') %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 订单状态 -->
+      <% if @order.status == 'paid' %>
+        <div class="alert alert-success mb-6">
+          <span class="text-white">✅ 订单状态已更新为"已付款"</span>
+        </div>
+      <% else %>
+        <div class="alert alert-info mb-6">
+          <span class="text-white">⚡ 订单状态正在更新中，请稍候刷新页面</span>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- 操作按钮 -->
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <%= link_to order_path(@order), class: "btn btn-glass btn-lg border-glow text-white" do %>
+        <span class="mr-2">📋</span> 查看订单详情
+      <% end %>
+      
+      <%= link_to orders_path, class: "btn btn-glass btn-lg text-white" do %>
+        <span class="mr-2">📦</span> 我的所有订单
+      <% end %>
+      
+      <%= link_to books_path, class: "btn btn-glass btn-lg text-white" do %>
+        <span class="mr-2">📚</span> 继续购物
+      <% end %>
+    </div>
+
+    <!-- 额外信息 -->
+    <div class="mt-12 glass rounded-xl p-6">
+      <h3 class="text-lg font-semibold text-white mb-3">
+        <span class="mr-2">💡</span> 温馨提示
+      </h3>
+      <div class="text-white/80 text-left space-y-2">
+        <p>• 您的数字收据已发送至邮箱：<span class="font-medium text-white"><%= @order.customer_email %></span></p>
+        <p>• 如有任何问题，请联系客服或查看订单详情</p>
+        <p>• 感谢您选择玻璃书屋，祝您阅读愉快！</p>
+      </div>
+    </div>
+  </div>
+</div>

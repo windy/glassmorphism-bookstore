@@ -1,0 +1,172 @@
+<div class="space-y-6">
+  <!-- Page Title -->
+  <div class="flex items-center space-x-4">
+    <%= link_to admin_book_path(@book.id), class: "btn btn-ghost btn-sm" do %>
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg>
+      Back to Book
+    <% end %>
+    <h1 class="text-3xl font-bold">Edit Book</h1>
+  </div>
+
+  <!-- Form -->
+  <div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+      <%= form_with model: [:admin, @book], local: true, class: "space-y-6" do |form| %>
+        <%= render 'shared/error_messages', model: @book %>
+
+        <!-- Title -->
+        <div class="form-control">
+          <%= form.label :title, class: "label" do %>
+            <span class="label-text font-medium">Title<% if field_required?(@book, :title) %> <span class="text-red-500">*</span><% end %></span>
+          <% end %>
+          <%= form.text_field :title, {
+            placeholder: "Enter title...",
+            class: "input input-bordered w-full"
+          }.merge(field_required?(@book, :title) ? { required: true } : {}) %>
+          <% if @book.errors[:title].any? %>
+            <label class="label">
+              <span class="label-text-alt text-red-500"><%= @book.errors[:title].first %></span>
+            </label>
+          <% end %>
+        </div>
+
+        <!-- Author -->
+        <div class="form-control">
+          <%= form.label :author, class: "label" do %>
+            <span class="label-text font-medium">Author<% if field_required?(@book, :author) %> <span class="text-red-500">*</span><% end %></span>
+          <% end %>
+          <%= form.text_field :author, {
+            placeholder: "Enter author...",
+            class: "input input-bordered w-full"
+          }.merge(field_required?(@book, :author) ? { required: true } : {}) %>
+          <% if @book.errors[:author].any? %>
+            <label class="label">
+              <span class="label-text-alt text-red-500"><%= @book.errors[:author].first %></span>
+            </label>
+          <% end %>
+        </div>
+
+        <!-- Description -->
+        <div class="form-control">
+          <%= form.label :description, class: "label" do %>
+            <span class="label-text font-medium">Description<% if field_required?(@book, :description) %> <span class="text-red-500">*</span><% end %></span>
+          <% end %>
+          <%= form.text_area :description, {
+            rows: 5,
+            placeholder: "Enter description...",
+            class: "textarea textarea-bordered w-full"
+          }.merge(field_required?(@book, :description) ? { required: true } : {}) %>
+          <% if @book.errors[:description].any? %>
+            <label class="label">
+              <span class="label-text-alt text-red-500"><%= @book.errors[:description].first %></span>
+            </label>
+          <% end %>
+        </div>
+
+        <!-- Price -->
+        <div class="form-control">
+          <%= form.label :price, class: "label" do %>
+            <span class="label-text font-medium">Price<% if field_required?(@book, :price) %> <span class="text-red-500">*</span><% end %></span>
+          <% end %>
+          <%= form.number_field :price, {
+            placeholder: "Enter price...",
+            class: "input input-bordered w-full"
+          }.merge(field_required?(@book, :price) ? { required: true } : {}) %>
+          <% if @book.errors[:price].any? %>
+            <label class="label">
+              <span class="label-text-alt text-red-500"><%= @book.errors[:price].first %></span>
+            </label>
+          <% end %>
+        </div>
+
+        <!-- Isbn -->
+        <div class="form-control">
+          <%= form.label :isbn, class: "label" do %>
+            <span class="label-text font-medium">Isbn<% if field_required?(@book, :isbn) %> <span class="text-red-500">*</span><% end %></span>
+          <% end %>
+          <%= form.text_field :isbn, {
+            placeholder: "Enter isbn...",
+            class: "input input-bordered w-full"
+          }.merge(field_required?(@book, :isbn) ? { required: true } : {}) %>
+          <% if @book.errors[:isbn].any? %>
+            <label class="label">
+              <span class="label-text-alt text-red-500"><%= @book.errors[:isbn].first %></span>
+            </label>
+          <% end %>
+        </div>
+
+        <!-- Category -->
+        <div class="form-control">
+          <%= form.label :category, class: "label" do %>
+            <span class="label-text font-medium">Category<% if field_required?(@book, :category) %> <span class="text-red-500">*</span><% end %></span>
+          <% end %>
+          <%= form.text_field :category, {
+            placeholder: "Enter category...",
+            class: "input input-bordered w-full"
+          }.merge(field_required?(@book, :category) ? { required: true } : {}) %>
+          <% if @book.errors[:category].any? %>
+            <label class="label">
+              <span class="label-text-alt text-red-500"><%= @book.errors[:category].first %></span>
+            </label>
+          <% end %>
+        </div>
+
+        <!-- Published at -->
+        <div class="form-control">
+          <%= form.label :published_at, class: "label" do %>
+            <span class="label-text font-medium">Published at<% if field_required?(@book, :published_at) %> <span class="text-red-500">*</span><% end %></span>
+          <% end %>
+          <%= form.date_field :published_at, {
+            placeholder: "Enter published at...",
+            class: "input input-bordered w-full"
+          }.merge(field_required?(@book, :published_at) ? { required: true } : {}) %>
+          <% if @book.errors[:published_at].any? %>
+            <label class="label">
+              <span class="label-text-alt text-red-500"><%= @book.errors[:published_at].first %></span>
+            </label>
+          <% end %>
+        </div>
+
+        <!-- Stock quantity -->
+        <div class="form-control">
+          <%= form.label :stock_quantity, class: "label" do %>
+            <span class="label-text font-medium">Stock quantity<% if field_required?(@book, :stock_quantity) %> <span class="text-red-500">*</span><% end %></span>
+          <% end %>
+          <%= form.number_field :stock_quantity, {
+            placeholder: "Enter stock quantity...",
+            class: "input input-bordered w-full"
+          }.merge(field_required?(@book, :stock_quantity) ? { required: true } : {}) %>
+          <% if @book.errors[:stock_quantity].any? %>
+            <label class="label">
+              <span class="label-text-alt text-red-500"><%= @book.errors[:stock_quantity].first %></span>
+            </label>
+          <% end %>
+        </div>
+
+        <!-- Metadata -->
+        <div class="border-t pt-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Created At</label>
+              <p class="text-sm text-gray-900"><%= @book.created_at.strftime("%B %d, %Y at %H:%M") %></p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Last Updated</label>
+              <p class="text-sm text-gray-900"><%= @book.updated_at.strftime("%B %d, %Y at %H:%M") %></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex justify-end space-x-3">
+          <%= link_to admin_book_path(@book.id), class: "btn btn-ghost" do %>
+            Cancel
+          <% end %>
+          <%= form.submit "Update Book", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

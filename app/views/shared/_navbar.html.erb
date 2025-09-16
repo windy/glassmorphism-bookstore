@@ -1,2 +1,149 @@
-<!-- Write your own navbar here. Automatically be rendered by application.html.erb -->
-<!-- Generate new logo svg at `images/app-logo.svg` at the first time, remove this line after generated -->
+<nav class="navbar-glass sticky top-0 z-50">
+  <div class="container mx-auto px-4">
+    <div class="navbar">
+      <!-- 左侧 Logo -->
+      <div class="navbar-start">
+        <%= link_to root_path, class: "btn btn-ghost text-xl text-white font-bold hover:bg-white/10" do %>
+          <span class="text-2xl mr-2">📚</span>
+          玻璃书屋
+        <% end %>
+      </div>
+
+      <!-- 中间导航链接 (桌面端) -->
+      <div class="navbar-center hidden lg:flex">
+        <ul class="menu menu-horizontal px-1 text-white">
+          <li>
+            <%= link_to root_path, 
+                class: "hover:bg-white/10 rounded-lg #{'bg-white/20' if current_page?(root_path)}" do %>
+              <span class="mr-1">🏠</span> 首页
+            <% end %>
+          </li>
+          <li>
+            <%= link_to books_path, 
+                class: "hover:bg-white/10 rounded-lg #{'bg-white/20' if current_page?(books_path)}" do %>
+              <span class="mr-1">📖</span> 图书
+            <% end %>
+          </li>
+          <% if user_signed_in? %>
+            <li>
+              <%= link_to cart_path, 
+                  class: "hover:bg-white/10 rounded-lg #{'bg-white/20' if current_page?(cart_path)}" do %>
+                <span class="mr-1">🛒</span> 购物车
+                <% if Current.user&.cart&.cart_items&.any? %>
+                  <div class="badge badge-accent badge-sm ml-1">
+                    <%= Current.user.cart.total_items %>
+                  </div>
+                <% end %>
+              <% end %>
+            </li>
+            <li>
+              <%= link_to orders_path, 
+                  class: "hover:bg-white/10 rounded-lg #{'bg-white/20' if current_page?(orders_path)}" do %>
+                <span class="mr-1">📋</span> 订单
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+
+      <!-- 右侧用户操作 -->
+      <div class="navbar-end">
+        <% if user_signed_in? %>
+          <!-- 用户已登录 -->
+          <div class="dropdown dropdown-end">
+            <div tabindex="0" role="button" class="btn btn-glass btn-circle text-white border-glow">
+              <div class="avatar placeholder">
+                <div class="bg-white/20 text-white rounded-full w-8">
+                  <span class="text-sm font-semibold">
+                    <%= Current.user.name.first.upcase %>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <ul tabindex="0" class="dropdown-content menu bg-white/10 backdrop-blur-xl border border-white/20 rounded-box z-[1] w-52 p-2 shadow-xl mt-2">
+              <li class="menu-title text-white/70">
+                <span>你好, <%= Current.user.name %></span>
+              </li>
+              <li>
+                <%= link_to profile_path, class: "text-white hover:bg-white/10" do %>
+                  <span class="mr-2">👤</span> 个人资料
+                <% end %>
+              </li>
+              <li>
+                <%= link_to orders_path, class: "text-white hover:bg-white/10" do %>
+                  <span class="mr-2">📋</span> 我的订单
+                <% end %>
+              </li>
+              <li>
+                <%= link_to cart_path, class: "text-white hover:bg-white/10" do %>
+                  <span class="mr-2">🛒</span> 购物车
+                  <% if Current.user&.cart&.cart_items&.any? %>
+                    <div class="badge badge-accent badge-sm">
+                      <%= Current.user.cart.total_items %>
+                    </div>
+                  <% end %>
+                <% end %>
+              </li>
+              <div class="divider my-1"></div>
+              <li>
+                <%= link_to sign_out_path, method: :delete, 
+                    class: "text-red-300 hover:bg-red-500/20", 
+                    confirm: "确定要退出登录吗？" do %>
+                  <span class="mr-2">🚪</span> 退出登录
+                <% end %>
+              </li>
+            </ul>
+          </div>
+        <% else %>
+          <!-- 用户未登录 -->
+          <div class="flex gap-2">
+            <%= link_to sign_in_path, class: "btn btn-glass text-white hover:bg-white/20" do %>
+              <span class="mr-1">🔑</span> 登录
+            <% end %>
+            <%= link_to sign_up_path, class: "btn btn-glass text-white border-glow hover:bg-white/20" do %>
+              <span class="mr-1">✨</span> 注册
+            <% end %>
+          </div>
+        <% end %>
+
+        <!-- 移动端菜单按钮 -->
+        <div class="dropdown dropdown-end lg:hidden ml-2">
+          <div tabindex="0" role="button" class="btn btn-glass btn-square text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+            </svg>
+          </div>
+          <ul tabindex="0" class="dropdown-content menu bg-white/10 backdrop-blur-xl border border-white/20 rounded-box z-[1] w-52 p-2 shadow-xl mt-2">
+            <li>
+              <%= link_to root_path, class: "text-white hover:bg-white/10 #{'bg-white/20' if current_page?(root_path)}" do %>
+                <span class="mr-2">🏠</span> 首页
+              <% end %>
+            </li>
+            <li>
+              <%= link_to books_path, class: "text-white hover:bg-white/10 #{'bg-white/20' if current_page?(books_path)}" do %>
+                <span class="mr-2">📖</span> 图书
+              <% end %>
+            </li>
+            <% if user_signed_in? %>
+              <li>
+                <%= link_to cart_path, class: "text-white hover:bg-white/10 #{'bg-white/20' if current_page?(cart_path)}" do %>
+                  <span class="mr-2">🛒</span> 购物车
+                  <% if Current.user&.cart&.cart_items&.any? %>
+                    <div class="badge badge-accent badge-sm ml-1">
+                      <%= Current.user.cart.total_items %>
+                    </div>
+                  <% end %>
+                <% end %>
+              </li>
+              <li>
+                <%= link_to orders_path, class: "text-white hover:bg-white/10 #{'bg-white/20' if current_page?(orders_path)}" do %>
+                  <span class="mr-2">📋</span> 订单
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

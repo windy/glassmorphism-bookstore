@@ -1,0 +1,132 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- 书籍图片 -->
+    <div class="space-y-4">
+      <div class="aspect-[3/4] bg-gradient-to-br from-blue-400 to-purple-500 rounded-xl overflow-hidden">
+        <% if @book.images.attached? %>
+          <%= image_tag @book.images.first, alt: @book.title, 
+                        class: "w-full h-full object-cover" %>
+        <% else %>
+          <div class="w-full h-full flex items-center justify-center">
+            <span class="text-white text-6xl">📚</span>
+          </div>
+        <% end %>
+      </div>
+      
+      <!-- 缩略图 -->
+      <% if @book.images.attached? && @book.images.count > 1 %>
+        <div class="flex gap-2 overflow-x-auto">
+          <% @book.images.each_with_index do |image, index| %>
+            <%= image_tag image, alt: "#{@book.title} 图片 #{index + 1}", 
+                          class: "w-16 h-20 object-cover rounded cursor-pointer flex-shrink-0" %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- 书籍信息 -->
+    <div class="space-y-6">
+      <!-- 标题和作者 -->
+      <div>
+        <h1 class="text-3xl font-bold mb-2"><%= @book.title %></h1>
+        <p class="text-xl text-base-content/70 mb-4">作者：<%= @book.author %></p>
+        
+        <!-- 状态标签 -->
+        <div class="flex gap-2 mb-4">
+          <% if @book.available? %>
+            <div class="badge badge-success badge-lg">有库存</div>
+          <% else %>
+            <div class="badge badge-error badge-lg">缺货</div>
+          <% end %>
+          <div class="badge badge-outline badge-lg"><%= @book.category %></div>
+        </div>
+      </div>
+
+      <!-- 价格 -->
+      <div class="card bg-base-200 shadow-sm">
+        <div class="card-body">
+          <div class="flex items-center justify-between">
+            <span class="text-lg">价格</span>
+            <span class="text-3xl font-bold text-primary">¥<%= @book.price %></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 详细信息 -->
+      <div class="card bg-base-200 shadow-sm">
+        <div class="card-body">
+          <h3 class="text-lg font-semibold mb-4">书籍信息</h3>
+          <div class="space-y-2">
+            <div class="flex justify-between">
+              <span>ISBN</span>
+              <span class="font-mono"><%= @book.isbn %></span>
+            </div>
+            <div class="flex justify-between">
+              <span>库存量</span>
+              <span><%= @book.stock_quantity %> 本</span>
+            </div>
+            <% if @book.published_at %>
+              <div class="flex justify-between">
+                <span>出版日期</span>
+                <span><%= @book.published_at.strftime('%Y年%m月%d日') %></span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- 购物车操作 -->
+      <% if user_signed_in? %>
+        <% if @book.available? %>
+          <%= form_with model: [@book, @cart_item], url: cart_items_path, method: :post, 
+                        local: true, class: "card bg-primary text-primary-content shadow-sm" do |form| %>
+            <div class="card-body">
+              <h3 class="text-lg font-semibold mb-4">加入购物车</h3>
+              <div class="flex gap-4 items-end">
+                <%= form.hidden_field :book_id, value: @book.id %>
+                <div class="form-control flex-1">
+                  <%= form.label :quantity, "数量", class: "label" %>
+                  <%= form.number_field :quantity, value: 1, min: 1, max: @book.stock_quantity,
+                                        class: "input input-bordered bg-white text-base-content" %>
+                </div>
+                <%= form.submit "加入购物车", 
+                                class: "btn btn-accent btn-lg flex-shrink-0" %>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="alert alert-error">
+            <span>抱歉，此书已缺货</span>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="card bg-base-200 shadow-sm">
+          <div class="card-body text-center">
+            <p class="mb-4">请登录后加入购物车</p>
+            <%= link_to "登录", sign_in_path, class: "btn btn-primary" %>
+            <%= link_to "注册", sign_up_path, class: "btn btn-outline" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- 书籍描述 -->
+  <% if @book.description.present? %>
+    <div class="mt-12">
+      <div class="card bg-base-200 shadow-sm">
+        <div class="card-body">
+          <h2 class="text-2xl font-bold mb-4">内容简介</h2>
+          <div class="prose max-w-none">
+            <%= simple_format(@book.description) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- 返回按钮 -->
+  <div class="mt-8">
+    <%= link_to "← 返回书籍列表", books_path, class: "btn btn-ghost" %>
+  </div>
+</div>

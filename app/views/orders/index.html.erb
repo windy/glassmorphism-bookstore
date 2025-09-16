@@ -1,0 +1,102 @@
+<div class="container mx-auto px-4 py-8 relative z-10">
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl font-bold text-white text-glow">我的订单</h1>
+    <div class="badge badge-primary badge-lg">
+      共 <%= @orders.count %> 个订单
+    </div>
+  </div>
+
+  <% if @orders.any? %>
+    <div class="space-y-6">
+      <% @orders.each do |order| %>
+        <div class="card-glass shadow-lg">
+          <div class="card-body">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+              <!-- 订单信息 -->
+              <div class="flex-1">
+                <div class="flex items-center gap-3 mb-2">
+                  <h3 class="card-title text-white">订单 #<%= order.id %></h3>
+                  <div class="badge 
+                    <% case order.status %>
+                    <% when 'pending' %>
+                      badge-warning
+                    <% when 'processing' %>
+                      badge-info
+                    <% when 'paid' %>
+                      badge-success
+                    <% when 'failed' %>
+                      badge-error
+                    <% else %>
+                      badge-outline
+                    <% end %>
+                  ">
+                    <% case order.status %>
+                    <% when 'pending' %>
+                      待付款
+                    <% when 'processing' %>
+                      处理中
+                    <% when 'paid' %>
+                      已付款
+                    <% when 'failed' %>
+                      支付失败
+                    <% else %>
+                      <%= order.status %>
+                    <% end %>
+                  </div>
+                </div>
+                
+                <div class="text-white/70 space-y-1">
+                  <p><span class="font-medium">商品：</span><%= order.product_name %></p>
+                  <p><span class="font-medium">创建时间：</span><%= order.created_at.strftime('%Y年%m月%d日 %H:%M') %></p>
+                  <% if order.status == 'paid' && order.updated_at != order.created_at %>
+                    <p><span class="font-medium">付款时间：</span><%= order.updated_at.strftime('%Y年%m月%d日 %H:%M') %></p>
+                  <% end %>
+                </div>
+              </div>
+
+              <!-- 价格和操作 -->
+              <div class="flex flex-col lg:flex-row items-end lg:items-center gap-4">
+                <div class="text-right">
+                  <div class="text-2xl font-bold text-white glow">
+                    ¥<%= order.amount %>
+                  </div>
+                  <div class="text-white/60 text-sm">
+                    <%= order.currency.upcase %>
+                  </div>
+                </div>
+                
+                <div class="flex gap-2">
+                  <%= link_to order_path(order), class: "btn btn-glass btn-sm border-glow text-white" do %>
+                    <span class="mr-1">📋</span> 查看详情
+                  <% end %>
+                  
+                  <% if order.status == 'pending' %>
+                    <%= link_to pay_order_path(order), method: :post,
+                                class: "btn btn-glass btn-sm border-glow text-white" do %>
+                      <span class="mr-1">💳</span> 立即付款
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- 分页 -->
+    <div class="flex justify-center mt-8">
+      <%= paginate @orders if respond_to?(:paginate) %>
+    </div>
+  <% else %>
+    <!-- 空状态 -->
+    <div class="text-center py-16 glass rounded-3xl">
+      <div class="text-6xl mb-6">📋</div>
+      <h2 class="text-2xl font-semibold mb-4 text-white">暂无订单</h2>
+      <p class="text-white/70 mb-8">您还没有任何订单，快去购买您喜欢的书籍吧！</p>
+      <%= link_to books_path, class: "btn btn-glass btn-lg border-glow text-white" do %>
+        <span class="mr-2">📚</span> 开始购物
+      <% end %>
+    </div>
+  <% end %>
+</div>

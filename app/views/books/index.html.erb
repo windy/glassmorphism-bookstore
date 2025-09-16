@@ -1,0 +1,76 @@
+<div class="container mx-auto px-4 py-8 relative z-10">
+  <!-- 搜索和筛选 -->
+  <div class="mb-8">
+    <div class="flex flex-col lg:flex-row gap-4 items-center justify-between">
+      <!-- 搜索框 -->
+      <%= form_tag books_path, method: :get, local: true, class: "flex-1" do %>
+        <div class="flex gap-2">
+          <%= text_field_tag :search, params[:search], placeholder: "搜索书名或作者...", 
+                             class: "input input-bordered flex-1 input-glass text-white placeholder-white/70" %>
+          <%= submit_tag "搜索", class: "btn btn-glass border-glow text-white" %>
+        </div>
+      <% end %>
+      
+      <!-- 分类筛选 -->
+      <div class="flex gap-2">
+        <%= link_to "全部", books_path, 
+                    class: "btn btn-glass text-white #{'border-glow bg-white/20' if params[:category].blank?}" %>
+        <% @categories.each do |category| %>
+          <%= link_to category, books_path(category: category), 
+                      class: "btn btn-glass text-white #{'border-glow bg-white/20' if params[:category] == category}" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- 书籍网格 -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <% @books.each do |book| %>
+      <div class="card-glass shadow-xl hover:scale-105 transition-all duration-300 text-white">
+        <figure class="px-4 pt-4">
+          <% if book.images.attached? %>
+            <%= image_tag book.images.first, alt: book.title, 
+                          class: "rounded-xl h-64 w-full object-cover" %>
+          <% else %>
+            <div class="h-64 w-full bg-gradient-to-br from-blue-400 to-purple-500 rounded-xl flex items-center justify-center">
+              <span class="text-white text-lg font-semibold">📚</span>
+            </div>
+          <% end %>
+        </figure>
+        <div class="card-body">
+          <h2 class="card-title text-lg text-white">
+            <%= book.title %>
+            <% if book.out_of_stock? %>
+              <div class="badge badge-error">缺货</div>
+            <% else %>
+              <div class="badge badge-success">有库存</div>
+            <% end %>
+          </h2>
+          <p class="text-sm text-white/70">作者：<%= book.author %></p>
+          <p class="text-sm text-white/70">分类：<%= book.category %></p>
+          <p class="text-xs text-white/60 line-clamp-3"><%= truncate(book.description, length: 80) %></p>
+          
+          <div class="card-actions justify-between items-center mt-4">
+            <div class="text-xl font-bold text-white glow">¥<%= book.price %></div>
+            <%= link_to book_path(book), class: "btn btn-glass btn-sm border-glow text-white" do %>
+              查看详情
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- 分页 -->
+  <div class="flex justify-center mt-8">
+    <%= paginate @books, theme: 'twitter_bootstrap_4' if respond_to?(:paginate) %>
+  </div>
+
+  <% if @books.empty? %>
+    <div class="text-center py-16 glass rounded-3xl">
+      <div class="text-6xl mb-4">📚</div>
+      <h3 class="text-xl font-semibold mb-2 text-white">暂无书籍</h3>
+      <p class="text-white/70">请稍后再来查看</p>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,117 @@
+/* Glassmorphism 样式 */
+
+/* 基础背景渐变 */
+.glassmorphism-bg {
+  background: linear-gradient(-45deg, #1e3a8a, #3b82f6, #8b5cf6, #a855f7) !important;
+  background-size: 400% 400% !important;
+  animation: gradientFlow 15s ease infinite !important;
+  min-height: 100vh !important;
+}
+
+/* 动画效果 */
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* 玻璃效果导航栏 */
+.navbar-glass {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 玻璃效果卡片 */
+.glass-card {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 玻璃效果按钮 */
+.glass-btn {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.glass-btn:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* 浮动动画 */
+.float-animation {
+  animation: floating 6s ease-in-out infinite !important;
+}
+
+@keyframes floating {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+/* 脉冲效果 */
+.pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite alternate !important;
+}
+
+@keyframes pulseGlow {
+  from {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+  }
+  to {
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.8), 0 0 40px rgba(139, 92, 246, 0.4);
+  }
+}
+
+/* 文本玻璃效果 */
+.glass-text {
+  color: rgba(255, 255, 255, 0.9) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* 输入框玻璃效果 */
+.glass-input {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+}
+
+.glass-input::placeholder {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* 页面专用样式 */
+.home-index-page {
+  background: linear-gradient(-45deg, #1e3a8a, #3b82f6, #8b5cf6, #a855f7) !important;
+  background-size: 400% 400% !important;
+  animation: gradientFlow 15s ease infinite !important;
+  min-height: 100vh !important;
+}
+
+/* 确保body和html也有背景 */
+body.home-index-page,
+html {
+  background: linear-gradient(-45deg, #1e3a8a, #3b82f6, #8b5cf6, #a855f7) !important;
+  background-size: 400% 400% !important;
+  animation: gradientFlow 15s ease infinite !important;
+  min-height: 100vh !important;
+}

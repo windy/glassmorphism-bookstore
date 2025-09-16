@@ -1,0 +1,193 @@
+<div class="container mx-auto px-4 py-8 relative z-10">
+  <div class="max-w-4xl mx-auto">
+    <!-- 返回按钮 -->
+    <div class="mb-6">
+      <%= link_to orders_path, class: "btn btn-glass text-white" do %>
+        <span class="mr-2">←</span> 返回订单列表
+      <% end %>
+    </div>
+
+    <!-- 订单标题 -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-white text-glow mb-4">
+        订单详情
+      </h1>
+      <div class="text-xl text-white/80">
+        订单号：#<%= @order.id %>
+      </div>
+    </div>
+
+    <!-- 订单状态卡片 -->
+    <div class="card-glass shadow-lg mb-8">
+      <div class="card-body">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <h2 class="text-2xl font-bold text-white mb-2">订单状态</h2>
+            <div class="badge badge-lg
+              <% case @order.status %>
+              <% when 'pending' %>
+                badge-warning
+              <% when 'processing' %>
+                badge-info
+              <% when 'paid' %>
+                badge-success
+              <% when 'failed' %>
+                badge-error
+              <% else %>
+                badge-outline
+              <% end %>
+            ">
+              <% case @order.status %>
+              <% when 'pending' %>
+                ⏳ 待付款
+              <% when 'processing' %>
+                ⚡ 处理中
+              <% when 'paid' %>
+                ✅ 已付款
+              <% when 'failed' %>
+                ❌ 支付失败
+              <% else %>
+                <%= @order.status %>
+              <% end %>
+            </div>
+          </div>
+          
+          <div class="text-right">
+            <div class="text-3xl font-bold text-white glow">
+              ¥<%= @order.amount %>
+            </div>
+            <div class="text-white/60">
+              <%= @order.currency.upcase %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 订单信息 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <!-- 商品信息 -->
+      <div class="card-glass shadow-lg">
+        <div class="card-body">
+          <h3 class="text-xl font-bold text-white mb-4">
+            <span class="mr-2">📦</span> 商品信息
+          </h3>
+          <div class="space-y-3 text-white/80">
+            <div class="flex justify-between">
+              <span>商品名称</span>
+              <span class="font-medium text-white"><%= @order.product_name %></span>
+            </div>
+            <div class="flex justify-between">
+              <span>金额</span>
+              <span class="font-bold text-white glow">¥<%= @order.amount %></span>
+            </div>
+            <div class="flex justify-between">
+              <span>货币</span>
+              <span><%= @order.currency.upcase %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 客户信息 -->
+      <div class="card-glass shadow-lg">
+        <div class="card-body">
+          <h3 class="text-xl font-bold text-white mb-4">
+            <span class="mr-2">👤</span> 客户信息
+          </h3>
+          <div class="space-y-3 text-white/80">
+            <div class="flex justify-between">
+              <span>姓名</span>
+              <span class="font-medium text-white"><%= @order.customer_name %></span>
+            </div>
+            <div class="flex justify-between">
+              <span>邮箱</span>
+              <span><%= @order.customer_email %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 时间信息 -->
+    <div class="card-glass shadow-lg mb-8">
+      <div class="card-body">
+        <h3 class="text-xl font-bold text-white mb-4">
+          <span class="mr-2">⏰</span> 时间信息
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-white/80">
+          <div>
+            <span class="block text-sm text-white/60">创建时间</span>
+            <span class="font-medium text-white">
+              <%= @order.created_at.strftime('%Y年%m月%d日 %H:%M:%S') %>
+            </span>
+          </div>
+          <div>
+            <span class="block text-sm text-white/60">最后更新</span>
+            <span class="font-medium text-white">
+              <%= @order.updated_at.strftime('%Y年%m月%d日 %H:%M:%S') %>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 支付信息 -->
+    <% if @order.stripe_payment_intent_id.present? %>
+      <div class="card-glass shadow-lg mb-8">
+        <div class="card-body">
+          <h3 class="text-xl font-bold text-white mb-4">
+            <span class="mr-2">💳</span> 支付信息
+          </h3>
+          <div class="text-white/80">
+            <div class="flex justify-between">
+              <span>Stripe ID</span>
+              <span class="font-mono text-sm text-white">
+                <%= @order.stripe_payment_intent_id %>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- 操作按钮 -->
+    <div class="text-center">
+      <% case @order.status %>
+      <% when 'pending' %>
+        <div class="space-y-4">
+          <p class="text-white/80 mb-4">
+            订单已创建，请点击下方按钮完成支付
+          </p>
+          <%= link_to pay_order_path(@order), method: :post,
+                      class: "btn btn-glass btn-lg border-glow text-white pulse-glow" do %>
+            <span class="mr-2">💳</span> 立即付款
+          <% end %>
+        </div>
+      <% when 'processing' %>
+        <div class="alert alert-info">
+          <span class="text-white">⚡ 订单正在处理中，请稍候...</span>
+        </div>
+      <% when 'paid' %>
+        <div class="space-y-4">
+          <div class="alert alert-success">
+            <span class="text-white">✅ 订单已完成支付，感谢您的购买！</span>
+          </div>
+          <%= link_to books_path, class: "btn btn-glass btn-lg border-glow text-white" do %>
+            <span class="mr-2">📚</span> 继续购物
+          <% end %>
+        </div>
+      <% when 'failed' %>
+        <div class="space-y-4">
+          <div class="alert alert-error">
+            <span class="text-white">❌ 支付失败，请重新尝试</span>
+          </div>
+          <%= link_to pay_order_path(@order), method: :post,
+                      class: "btn btn-glass btn-lg border-glow text-white" do %>
+            <span class="mr-2">🔄</span> 重新支付
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
